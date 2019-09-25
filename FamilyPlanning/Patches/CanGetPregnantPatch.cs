@@ -35,14 +35,17 @@ namespace FamilyPlanning.Patches
             if ((Game1.getLocationFromName("FarmHouse") as FarmHouse).upgradeLevel < 2 || spouseFriendship.DaysUntilBirthing >= 0 || (heartLevelForNPC < 10 || farmer.GetDaysMarried() < 7))
                 return;
 
-            //this is surely not the most efficient way to check, but I want it to work first.
-            //I think the youngest child is last on the list, but I'd need to check manually to verify.
+            //this is surely not the most efficient way to check, but I want it to work.
             if (children.Count < totalChildren)
             {
                 //If you have 0 children, skips straight to true
                 foreach (Child child in children)
                 {
-                    //55 daysOld is toddler, and pregnancy is 14 days
+                    /* 
+                     * Toddlers are 55 daysOld, and pregnancy lasts 14 days,
+                     * so requiring the previous sibling to be at least 41 days
+                     * will ensure that they are out of the crib when the baby is born.
+                     */
                     if (child.daysOld < 41)
                     {
                         __result = false;

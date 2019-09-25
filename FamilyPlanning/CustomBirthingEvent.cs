@@ -7,6 +7,7 @@ using Netcode;
 using Microsoft.Xna.Framework;
 using StardewValley.Characters;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley.BellsAndWhistles;
 
 namespace FamilyPlanning
 {
@@ -25,30 +26,41 @@ namespace FamilyPlanning
         //private Vector2 targetLocation;
         //private TextBox babyNameBox;
         //private ClickableTextureComponent okButton;
-
         public NetFields NetFields { get; } = new NetFields();
         
         /*
-         * This method initially generates isMale based on number of children & random value.
-         * Also, method is gendered based on the child.
+         * The vast majority of this code is the same as the original BirthingEvent.
+         * Instead of completely removing the unused variables in BirthingEvent, I've commented them out.
+         */
+
+        /*
+         * CustomNamingMenu allows the player to choose the gender of the child,
+         * so it's initialized to male for default purposes.
+         * 
+         * I'm removing the gender references in the message text because the message would always imply male.
          */
         public bool setUp()
         {
             Random random = new Random((int)Game1.uniqueIDForThisGame + (int)Game1.stats.DaysPlayed);
             NPC characterFromName = Game1.getCharacterFromName(Game1.player.spouse, false);
             Game1.player.CanMove = false;
-
-            //this.isMale = Game1.player.getNumberOfChildren() != 0 ? Game1.player.getChildren()[0].Gender == 1 : random.NextDouble() < 0.5;
-            isMale = true;
-            message = !characterFromName.isGaySpouse() ? "During the night, your baby was born." : "During the night, the adoption agency dropped off your new baby.";
             
+            isMale = true;
+
+            string genderTerm = Lexicon.getGenderedChildTerm(isMale);
+            message = !characterFromName.isGaySpouse() ? (characterFromName.Gender != 0 ? Game1.content.LoadString("Strings\\Events:BirthMessage_SpouseMother", (object)Lexicon.getGenderedChildTerm(this.isMale), (object)characterFromName.displayName) : Game1.content.LoadString("Strings\\Events:BirthMessage_PlayerMother", (object)Lexicon.getGenderedChildTerm(this.isMale))) : Game1.content.LoadString("Strings\\Events:BirthMessage_Adoption", (object)Lexicon.getGenderedChildTerm(this.isMale));
+            //starting from i = 1 is a guess, but I'm pretty confident.
+            for (int i = 1; i < message.Length - genderTerm.Length; i++)
+            {
+                if(message.Substring(i, genderTerm.Length).Equals(genderTerm))
+                {
+                    message = message.Substring(0, i - 1) + message.Substring(i + genderTerm.Length, message.Length - i - genderTerm.Length);
+                    i = message.Length;
+                }
+            }
+
             return false;
         }
-        /* message original:
-         * "BirthMessage_Adoption": "During the night, the adoption agency dropped off your new baby {0}.",
-         * "BirthMessage_PlayerMother": "During the night, you gave birth to a baby {0}.",
-         * "BirthMessage_SpouseMother": "During the night, {1} gave birth to a baby {0}.",
-         */
 
         public bool tickUpdate(GameTime time)
         {
@@ -75,7 +87,8 @@ namespace FamilyPlanning
                 if (!naming)
                 {
                     //I replaced the old NamingMenu with my CustomNamingMenu (to allow for gender control)
-                    Game1.activeClickableMenu = new CustomNamingMenu(new CustomNamingMenu.doneNamingBehavior(returnBabyName), "What should we name our baby?", "");
+                    //This title dialogue isn't so easily edited to allow for all languages, so CustomNamingMenu fixes it.
+                    Game1.activeClickableMenu = new CustomNamingMenu(new CustomNamingMenu.doneNamingBehavior(returnBabyName), Game1.content.LoadString("Strings\\Events:BabyNamingTitle_Male"), Game1.content.LoadString("Strings\\Events:BabyNamingTitle_Female"), "");
                     naming = true;
                 }
                 if (babyName != null && babyName != "" && babyName.Length > 0)

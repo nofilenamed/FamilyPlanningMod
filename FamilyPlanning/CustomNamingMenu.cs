@@ -25,17 +25,19 @@ namespace FamilyPlanning
         public ClickableComponent textBoxCC;
         private TextBoxEvent e;
         private doneNamingBehavior doneNaming;
-        private string title;
+        private string titleMale;
+        private string titleFemale;
         private string gender;
 
-        public CustomNamingMenu(doneNamingBehavior b, string titleIn, string defaultName = null)
+        public CustomNamingMenu(doneNamingBehavior b, string titleMaleIn, string titleFemaleIn, string defaultName = null)
         {
             doneNaming = b;
             xPositionOnScreen = 0;
             yPositionOnScreen = 0;
             width = Game1.viewport.Width;
             height = Game1.viewport.Height;
-            title = titleIn;
+            titleMale = titleMaleIn;
+            titleFemale = titleFemaleIn;
             gender = "Male";
             //randomButton = new ClickableTextureComponent(new Rectangle(xPositionOnScreen + width + 51 + 64, Game1.viewport.Height / 2, 64, 64), Game1.mouseCursors, new Rectangle(381, 361, 10, 10), 4f, false);
             textBox = new TextBox(null, null, Game1.dialogueFont, Game1.textColor);
@@ -196,7 +198,11 @@ namespace FamilyPlanning
         {
             base.draw(b);
             b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
-            SpriteText.drawStringWithScrollCenteredAt(b, title, Game1.viewport.Width / 2, Game1.viewport.Height / 2 - 128, title, 1f, -1, 0, 0.88f, false);
+            //I've added this to change the gender of the title text depending on which gender child you have selected.
+            if(gender.Equals("Male"))
+                SpriteText.drawStringWithScrollCenteredAt(b, titleMale, Game1.viewport.Width / 2, Game1.viewport.Height / 2 - 128, titleMale, 1f, -1, 0, 0.88f, false);
+            else
+                SpriteText.drawStringWithScrollCenteredAt(b, titleFemale, Game1.viewport.Width / 2, Game1.viewport.Height / 2 - 128, titleFemale, 1f, -1, 0, 0.88f, false);
             textBox.Draw(b, true);
             doneNamingButton.draw(b);
             randomButton.draw(b);
