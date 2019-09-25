@@ -11,8 +11,7 @@ namespace FamilyPlanning.Patches
     {
         public static void Postfix(Child __instance)
         {
-            //Either the child is new and needs a new sprite, or they just aged up to toddler and need a new sprite
-            if(__instance.Sprite == null || (__instance.Age >= 3 && __instance.Sprite != null && __instance.Sprite.CurrentFrame != 0))
+            if(__instance.Sprite == null || __instance.Sprite.textureName.Contains("Characters\\") || (__instance.Age >= 3 && __instance.Sprite.CurrentFrame == 0))
             {
                 //Try to load the child sprite from a content pack
                 Tuple<string, string> assetNames = ModEntry.GetChildSpriteData(__instance.Name);
