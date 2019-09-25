@@ -23,7 +23,18 @@ namespace FamilyPlanning.Patches
             if (!currentLocation.characters.Contains(__instance))
                 return;
 
-            //Would normally use getChildBed(this.Gender)
+            /* 
+             * Stardew Valley would normally use getChildBed(this.gender),
+             * but that always puts children on one Tile by gender and will stack children.
+             * 
+             * Currently, children will choose their bed by order of birth and gender.
+             * Oldest siblings get priority, so the first child always sleeps in the same spot.
+             * Otherwise, younger siblings sort themselves to try and pair like genders.
+             * (The youngest child will always get stuck in the last open spot, though.)
+             * 
+             * If I expand this mod to edit the house, then I will need to revisit this.
+             */
+
             int i = 1;
             int birthNumber = 0;
             int boys = 0;

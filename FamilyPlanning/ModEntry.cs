@@ -18,7 +18,7 @@ namespace FamilyPlanning
      */
 
     /* Documented issues:
-     * -> Currently only makes sense in English.
+     * -> I haven't comfirmed whether every language works with my message editing.
      * -> If you have more than 2 kids, kids will have to share beds.
      * -> You don't get new dialogue from your spouse for the kids after 2 (unless you're gay)
      * -> (not so much an issue: you still get the Fullhouse achievment at 2 kids)
@@ -34,12 +34,7 @@ namespace FamilyPlanning
      *  -> StardewValley.Events.BirthingEvent.setUp() -> determines baby gender based on previous sibling
      *  -> StardewValley.Events.BirthingEvent.tickUpdate(GameTime time) -> spouse dialogue based on number of children
      */
-
-    /* How to handle players setting child sprites:
-     * I'd like to make this mod compatible with as many toddler sprite mods as possible
-     * 
-     */
-
+     
     /*
      * For now, I'm just going to be patching over the single player
      */
