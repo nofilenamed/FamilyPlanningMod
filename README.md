@@ -3,7 +3,7 @@ This is a Stardew Valley mod called Family Planning. Family Planning allows you 
 
 ## How to use:
 
-After you've loaded the singleplayer save file you want the mod to change, go to the SMAPI console and use the command "set_number_of_children <value>". This will change the maximum number of children you can have to the value you entered, from zero to four. There's also a command "get_number_of_children" to check what the value is currently set to.
+After you've loaded the singleplayer save file you want the mod to change, go to the SMAPI console and use the command "set_number_of_children \<value\>". This will change the maximum number of children you can have to the value you entered, from zero to four. There's also a command "get_number_of_children" to check what the value is currently set to.
 
 For example, if you wanted to have the max number of children possible, four, you would load your save file and type "set_number_of_children 4" into the console. Your spouse will then be able to prompt you about having children until you reach four.
 
@@ -17,9 +17,9 @@ If you're using other mods to change the appearance of your children, this mod w
 To create a Content Pack, first download the Example Content Pack from the Nexus page for Family Planning. There are three steps to finishing the Content Pack: you will need to edit the manifest.json, add your image files to the assets folder, and edit the data.json in the assets folder.
 
 ### Manifest.json
-Inside the manifest.json, you should replace the text <Your Name Here> in the Author and UniqueID fields with your name.
+Inside the manifest.json, you should replace the text \<Your Name Here\> in the Author and UniqueID fields with your name.
   
-For example, my name is Loe2run, so I would replace "<Your Name Here>" with "Loe2run". SMAPI will not run your Content Pack if "<Your Name Here>" is in the manifest.json file (because the < character isn't allowed).
+For example, my name is Loe2run, so I would replace "\<Your Name Here\>" with "Loe2run". SMAPI will not run your Content Pack if "\<Your Name Here\>" is in the manifest.json file (because the \< character isn't allowed).
   
 ### Image files
 Decide on which image files you'd like to use for your children and place those files in the assets folder.
