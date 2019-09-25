@@ -11,7 +11,7 @@ Also, you will now be able to choose your child's gender when you name them. You
 
 ## Child Appearance Mods:
 
-If you're using other mods to change the appearance of your children, this mod will be affected. This mod doesn't change the way child sprites are generated, so any mod which directly replaces the xnb file will lead to children being identical. For Content Patcher mods, you can personally edit the content.json file to patch different appearances for each child.
+If you're using other mods to change the appearance of your children, this mod will be affected. This mod doesn't change the way child sprites are generated, so any mod which directly replaces the xnb file will lead to children being identical. I'm currently in the process of adding the ability to customize child sprites to this mod.
 
 ## Compatibility:
 
