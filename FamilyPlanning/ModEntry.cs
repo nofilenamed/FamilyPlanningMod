@@ -38,7 +38,7 @@ namespace FamilyPlanning
     /* Content Packs:
      * I've added support for Content Packs to this mod.
      * I'll add a pre-made Content Pack on Nexus that only needs your to add the existing png's.
-     * Instructions for how to make a Content Pack are in the ChildSpriteData class and the README.md.
+     * Instructions for how to make a Content Pack are in the README.md on GitHub and to a lesser extent the ChildSpriteData class.
      */
 
     /*
