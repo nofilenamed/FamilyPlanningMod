@@ -5,6 +5,7 @@ using Harmony;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Events;
+using System.Collections.Generic;
 
 namespace FamilyPlanning
 {
@@ -14,35 +15,42 @@ namespace FamilyPlanning
      *   -> If 1, they stop after 1.
      *   -> The default is 2, vanilla behavior. (if they don't already have more than 2 kids)
      *   -> If more than 2, then they get the event even after 2 children.
-     * -> (I'll need to figure out what to limit the total number at. Currently, it's 4 total kids.)
+     * -> Also, this mods allows the player to customize the gender of the child at birth.
      */
 
     /* Documented issues:
      * -> I haven't comfirmed whether every language works with my message editing.
      * -> If you have more than 2 kids, kids will have to share beds.
      * -> You don't get new dialogue from your spouse for the kids after 2 (unless you're gay)
-     * -> (not so much an issue: you still get the Fullhouse achievment at 2 kids)
-     * -> (not issue: the naming menu allows you to determine child gender)
      * -> Your spouse can't get pregnant until the previous child is a toddler. (not vanilla?)
      * -> The way children choose beds is by gender and age. If you have two or fewer kids, they each get their own bed.
      *    Once you get more than 2, they need to double up, so they'll try first to double up with a sibling of the same gender.
      * -> Currently disabled for multiplayer
-     */ 
+     * -> (not so much an issue: you still get the Fullhouse achievment at 2 kids)
+     */
 
     /* Harmony patches needed:
      *  -> StardewValley.NPC.canGetPregnant() -> determines the number of children you can have
      *  -> StardewValley.Events.BirthingEvent.setUp() -> determines baby gender based on previous sibling
      *  -> StardewValley.Events.BirthingEvent.tickUpdate(GameTime time) -> spouse dialogue based on number of children
      */
-     
+
+    /* Content Packs:
+     * I've added support for Content Packs to this mod.
+     * I'll add a pre-made Content Pack on Nexus that only needs your to add the existing png's.
+     * Instructions for how to make a Content Pack are in the ChildSpriteData class and the README.md.
+     */
+
     /*
      * For now, I'm just going to be patching over the single player
      */
+
     class ModEntry : Mod
     {
         private static FamilyData data;
+        private static List<IContentPack> contentPacks;
         private static IMonitor monitor;
-        private static IModHelper helper;
+        public static IModHelper helper;
         private readonly int maxChildren = 4;
 
         public override void Entry(IModHelper helper)
@@ -59,6 +67,13 @@ namespace FamilyPlanning
             //create variables
             monitor = Monitor;
             ModEntry.helper = helper;
+            //Load content packs
+            contentPacks = new List<IContentPack>();
+            foreach (IContentPack contentPack in helper.ContentPacks.GetOwned())
+            {
+                Monitor.Log($"Reading content pack: {contentPack.Manifest.Name} {contentPack.Manifest.Version} from {contentPack.DirectoryPath}");
+                contentPacks.Add(contentPack);
+            }
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -79,11 +94,6 @@ namespace FamilyPlanning
                 Game1.farmEvent = new CustomBirthingEvent();
                 Game1.farmEvent.setUp();
             }
-        }
-
-        public static FamilyData GetFamilyData()
-        {
-            return data;
         }
 
         public void GetTotalChildrenConsole(string command, string[] args)
@@ -119,6 +129,38 @@ namespace FamilyPlanning
             {
                 Monitor.Log(e.Message);
             }
+        }
+
+        public static FamilyData GetFamilyData()
+        {
+            return data;
+        }
+
+        public static Tuple<string, string> GetChildSpriteData(string childName)
+        {
+            foreach(IContentPack contentPack in contentPacks)
+            {
+                try
+                {
+                    ChildSpriteData childData = contentPack.ReadJsonFile<ChildSpriteData>("assets/data.json");
+                    foreach (string key in childData.ChildSpriteID.Keys)
+                    {
+                        if (key.Equals(childName))
+                        {
+                            childData.ChildSpriteID.TryGetValue(key, out Tuple<string, string> pair);
+                            string assetName1 = contentPack.GetActualAssetKey("assets/" + pair.Item1);
+                            string assetName2 = contentPack.GetActualAssetKey("assets/" + pair.Item2);
+                            return new Tuple<string, string>(assetName1, assetName2);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    monitor.Log("An exception occurred in Loe.FamilyPlanning while loading the child sprite.");
+                    monitor.Log(e.Message);
+                }
+            }
+            return null;
         }
     }
 }
