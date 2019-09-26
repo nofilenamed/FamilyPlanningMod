@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChildSpriteData.cs" />
+    <Compile Include="ContentPackData.cs" />
     <Compile Include="CustomBirthingEvent.cs" />
     <Compile Include="CustomNamingMenu.cs" />
     <Compile Include="FamilyData.cs" />

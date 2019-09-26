@@ -21,7 +21,6 @@ namespace FamilyPlanning
     /* Documented issues:
      * -> I haven't comfirmed whether every language works with my message editing.
      * -> If you have more than 2 kids, kids will have to share beds.
-     * -> You don't get new dialogue from your spouse for the kids after 2 (unless you're gay)
      * -> Your spouse can't get pregnant until the previous child is a toddler. (not vanilla?)
      * -> The way children choose beds is by gender and age. If you have two or fewer kids, they each get their own bed.
      *    Once you get more than 2, they need to double up, so they'll try first to double up with a sibling of the same gender.
@@ -31,14 +30,14 @@ namespace FamilyPlanning
 
     /* Harmony patches needed:
      *  -> StardewValley.NPC.canGetPregnant() -> determines the number of children you can have
-     *  -> StardewValley.Events.BirthingEvent.setUp() -> determines baby gender based on previous sibling
-     *  -> StardewValley.Events.BirthingEvent.tickUpdate(GameTime time) -> spouse dialogue based on number of children
+     *  -> StardewValley.Characters.Child.reloadSprite() -> determines the sprite for a child
+     *  -> StardewValley.Characters.Child.tenMinuteUpdate() -> tells the child where their bed is
      */
 
     /* Content Packs:
      * I've added support for Content Packs to this mod.
      * I'll add a pre-made Content Pack on Nexus that only needs your to add the existing png's.
-     * Instructions for how to make a Content Pack are in the README.md on GitHub and to a lesser extent the ChildSpriteData class.
+     * Instructions for how to make a Content Pack are in the README.md on GitHub and to a lesser extent the ContentPackData class.
      */
 
     /*
@@ -142,12 +141,14 @@ namespace FamilyPlanning
             {
                 try
                 {
-                    ChildSpriteData childData = contentPack.ReadJsonFile<ChildSpriteData>("assets/data.json");
-                    foreach (string key in childData.ChildSpriteID.Keys)
+                    ContentPackData cpdata = contentPack.ReadJsonFile<ContentPackData>("assets/data.json");
+                    if (cpdata.ChildSpriteID == null)
+                        return null;
+                    foreach (string key in cpdata.ChildSpriteID.Keys)
                     {
                         if (key.Equals(childName))
                         {
-                            childData.ChildSpriteID.TryGetValue(key, out Tuple<string, string> pair);
+                            cpdata.ChildSpriteID.TryGetValue(key, out Tuple<string, string> pair);
                             string assetName1 = contentPack.GetActualAssetKey("assets/" + pair.Item1);
                             string assetName2 = contentPack.GetActualAssetKey("assets/" + pair.Item2);
                             return new Tuple<string, string>(assetName1, assetName2);
@@ -156,7 +157,34 @@ namespace FamilyPlanning
                 }
                 catch (Exception e)
                 {
-                    monitor.Log("An exception occurred in Loe.FamilyPlanning while loading the child sprite.");
+                    monitor.Log("An exception occurred in Loe2run.FamilyPlanning while loading the child sprite.");
+                    monitor.Log(e.Message);
+                }
+            }
+            return null;
+        }
+
+        public static Tuple<int, string> GetSpouseDialogueData(string spouseName)
+        {
+            foreach (IContentPack contentPack in contentPacks)
+            {
+                try
+                {
+                    ContentPackData cpdata = contentPack.ReadJsonFile<ContentPackData>("assets/data.json");
+                    if (cpdata.SpouseDialogue == null)
+                        return null;
+                    foreach(string key in cpdata.SpouseDialogue.Keys)
+                    {
+                        if (key.Equals(spouseName))
+                        {
+                            cpdata.SpouseDialogue.TryGetValue(key, out Tuple<int, string> spouseDialogue);
+                            return spouseDialogue;
+                        }
+                    }
+                }
+                catch(Exception e)
+                {
+                    monitor.Log("An exception occurred in Loe2run.FamilyPlanning while loading spouse dialogue.");
                     monitor.Log(e.Message);
                 }
             }
