@@ -5,4 +5,3 @@ C:\Users\PC\source\repos\FamilyPlanning\FamilyPlanning\obj\Debug\FamilyPlanning.
 C:\Users\PC\source\repos\FamilyPlanning\FamilyPlanning\obj\Debug\FamilyPlanning.pdb
 C:\Users\PC\source\repos\FamilyPlanning\FamilyPlanning\bin\Debug\0Harmony.dll
 C:\Users\PC\source\repos\FamilyPlanning\FamilyPlanning\obj\Debug\FamilyPlanning.csproj.CopyComplete
-C:\Users\PC\source\repos\FamilyPlanning\FamilyPlanning\obj\Debug\FamilyPlanning.csprojAssemblyReference.cache
