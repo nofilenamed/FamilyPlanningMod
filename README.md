@@ -72,10 +72,15 @@ If you're using this mod for multiple save files and want to have multiple save 
 
 Using this method, the gender or skin color of the child has no effect on their sprite appearance. You could decide to use a male toddler sprite for a female child and the Content Pack will go ahead and apply the sprite regardless.
 
+## Multiplayer
+
+The mod Family Planning, without any content packs, is compatible with multiplayer. This mod only affects the player who has it downloaded, so there are no issues with multiplayer.
+
+When you have a content pack installed however, due to a bug in Stardew Valley 1.3, you may run into game-breaking crashes if one player has the content pack installed and the other(s) don't. If you'd like to use a content pack while playing a multiplayer game, be sure that everyone has the same content pack(s) installed.
+
 ## Compatibility:
 
 Works with Stardew Valley 1.3 beta on Linux/Mac/Windows.
-Only works in single player for the current version.
 This mod uses Harmony, so there may be interference with other mods using Harmony to patch the same methods. If you notice any issues, please let me know.
 
 ## More details:
