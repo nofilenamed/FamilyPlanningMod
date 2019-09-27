@@ -40,8 +40,15 @@ namespace FamilyPlanning
      * Instructions for how to make a Content Pack are in the README.md on GitHub and to a lesser extent the ContentPackData class.
      */
 
-    /*
-     * For now, I'm just going to be patching over the single player
+    /* Multiplayer testing:
+     * -> Pathoschild discovered a glitch in Stardew Valley 1.3.
+     *    When player 2 enters player 1's house, player 2 loads player 1's child as if they were their own.
+     *    (As seen by a dark skinned child becoming a light skinned child?)
+     *    Therefore, if one player has a Family Planning content pack and the other doesn't,
+     *    there are some serious issues (crashing).
+     * -> Multiplayer compatibility: It's okay for only one player to have Family Planning,
+     *    but if you want to have a content pack, then both players need Family Planning & that exact content pack.
+     * -> (Also for the sake of multiplayer compatibility, save data is now saved to assets/savedata.json)
      */
 
     class ModEntry : Mod
@@ -55,8 +62,8 @@ namespace FamilyPlanning
         public override void Entry(IModHelper helper)
         {
             //Console commands
-            helper.ConsoleCommands.Add("get_number_of_children", "Returns the number of children you can have.", GetTotalChildrenConsole);
-            helper.ConsoleCommands.Add("set_number_of_children", "Sets the value for how many children you can have. (Currently, the limit is " + maxChildren + ".) \nUsage: set_number_of_children <value>\n- value: the number of children you can have.", SetTotalChildrenConsole);
+            helper.ConsoleCommands.Add("get_max_children", "Returns the number of children you can have.", GetTotalChildrenConsole);
+            helper.ConsoleCommands.Add("set_max_children", "Sets the value for how many children you can have. (Currently, the limit is " + maxChildren + ".) \nUsage: set_max_children <value>\n- value: the number of children you can have.", SetTotalChildrenConsole);
             //Event handlers
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
@@ -77,15 +84,23 @@ namespace FamilyPlanning
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            if (!Context.IsMainPlayer)
+            if (!Context.IsWorldReady)
                 return;
-            
-            data = Helper.Data.ReadSaveData<FamilyData>(Constants.SaveFolderName) ?? new FamilyData();
+
+            try
+            {
+                data = Helper.Data.ReadJsonFile<FamilyData>("data/savedata.json");
+            }
+            catch (Exception)
+            {
+                data = new FamilyData();
+                Helper.Data.WriteJsonFile<FamilyData>("data/savedata.json", data);
+            }
         }
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if (!Context.IsMainPlayer)
+            if (!Context.IsWorldReady)
                 return;
 
             if (Game1.farmEvent != null && Game1.farmEvent is BirthingEvent)
@@ -97,7 +112,7 @@ namespace FamilyPlanning
 
         public void GetTotalChildrenConsole(string command, string[] args)
         {
-            if (!Context.IsMainPlayer)
+            if (!Context.IsWorldReady)
                 return;
 
             Monitor.Log("The number of children you can have is: " + GetFamilyData().TotalChildren);
@@ -105,7 +120,7 @@ namespace FamilyPlanning
 
         public void SetTotalChildrenConsole(string command, string[] args)
         {
-            if (!Context.IsMainPlayer)
+            if (!Context.IsWorldReady)
                 return;
 
             int input;
@@ -118,7 +133,7 @@ namespace FamilyPlanning
                 else if (input >= 0)
                 {
                     data.TotalChildren = input;
-                    Helper.Data.WriteSaveData(Constants.SaveFolderName, data);
+                    Helper.Data.WriteJsonFile("data/savedata.json", data);
                     Monitor.Log("The number of children you can have has been set to " + input + ".");
                 }
                 else
