@@ -72,6 +72,64 @@ If you're using this mod for multiple save files and want to have multiple save 
 
 Using this method, the gender or skin color of the child has no effect on their sprite appearance. You could decide to use a male toddler sprite for a female child and the Content Pack will go ahead and apply the sprite regardless.
 
+## Spouse Dialogue
+
+In addition to Content Packs allowing for customization of child sprites, they can also allow for customization of spouse dialogue. Your spouse can have a custom dialogue line on the day of a child's birth. This dialogue is also added to the data.json file in the assets folder.
+
+### Data.json
+
+The default version of the data.json in the Example Content Pack will read:
+
+```cs
+{
+  "SpouseDialogue": {
+      "<Spouse Name>": {
+        "Item1": <birth number>,
+        "Item2": "<dialogue>"
+      },
+  }
+}
+```
+
+For an example of how to fill this out, let's say you want your spouse, Maru, to say "(child's name)'s birth reminded me of MARILDA... I wonder what she's doing right now." when your first child is born. You would enter that into your data.json file like this:
+
+```cs
+{
+  "SpouseDialogue": {
+      "Maru": {
+        "Item1": 1,
+        "Item2": "{0}'s birth reminded me of MARILDA... I wonder what she's doing right now."
+      },
+  }
+}
+```
+Item1 is a number representing which birth should trigger the dialogue, with 1 as the first child, 2 as the second, etc. Item2 is the dialogue line itself. As you see in this example, the characters "{0}" can be used to represent your child's name. In addition, the characters "{1}" can be used to represent the player's name.
+
+### Using both at once
+
+Here's an example of formatting your data.json to contain both child sprite information and spouse dialogue information:
+
+```cs
+{
+  "ChildSpriteID": {
+    "Amber": {
+      "Item1": "leahbaby.png",
+      "Item2": "leahhairbuns.png"
+    },
+    "Beverly": {
+      "Item1": "leahbaby.png",
+      "Item2": "leahpigtails.png"
+    }
+  },
+  "SpouseDialogue": {
+      "Maru": {
+        "Item1": 1,
+        "Item2": "{0}'s birth reminded me of MARILDA... I wonder what she's doing right now."
+      },
+  }
+}
+
+```
 ## Multiplayer
 
 The mod Family Planning, without any content packs, is compatible with multiplayer. This mod only affects the player who has it downloaded, so there are no issues with multiplayer.
@@ -85,6 +143,10 @@ This mod uses Harmony, so there may be interference with other mods using Harmon
 
 ## More details:
 
-The reason why the mod currently limits your to four children maximum is because it doesn't edit the number of beds in your house. Therefore, all of your children need to share the two existing beds. Two children can fit in a bed together, so four children is the limit (unless I update this mod to add more beds). Also, children will attempt to share a bed with a sibling of the same gender when possible.
+-> To uninstall Family Planning, remove the Family Planning mod folder. If you have any content packs for Family Planning, be sure to remove them as well. The children born at the time the mod is removed will not be removed. The only way to remove children is to remove all of them by turning them into doves at the witch's hut.
 
-For the 1.0.0 version, your spouse won't get dialogue acknowledging the additional children (besides the generic adoption dialogue for gay couples). This is something I'm planning to update.
+As described in the multiplayer section above, there are issues when one player has a Family Planning content pack and the other players don't. When uninstalling Family Planning from a multiplayer farm, be certain that no players have a content pack installed to avoid glitches.
+
+-> Family size preferences are, from 1.1.0 on, saved to a file called "savedata.json" in the assets folder. This file is what keeps track of your max_children value. If you delete it, the game will generate a new savedata.json file and reset your default value to 2 (unless you already have more than 2 children).
+
+-> The reason why the mod currently limits your to four children maximum is because it doesn't edit the number of beds in your house. Therefore, all of your children need to share the two existing beds. Two children can fit in a bed together, so four children is the limit (unless I update this mod to add more beds). Also, children will attempt to share a bed with a sibling of the same gender when possible.
