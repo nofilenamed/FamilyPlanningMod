@@ -147,6 +147,6 @@ This mod uses Harmony, so there may be interference with other mods using Harmon
 
 As described in the multiplayer section above, there are issues when one player has a Family Planning content pack and the other players don't. When uninstalling Family Planning from a multiplayer farm, be certain that no players have a content pack installed to avoid glitches.
 
--> Family size preferences are, from 1.1.0 on, saved to a file called "savedata.json" in the assets folder. This file is what keeps track of your max_children value. If you delete it, the game will generate a new savedata.json file and reset your default value to 2 (unless you already have more than 2 children).
+-> Family size preferences are, from 1.1.0 on, saved to a file called "savedata.json" in the assets folder. This file is what keeps track of the maximum children you can have. If you delete it, the game will generate a new savedata.json file and reset your default value to 2 (unless you already have more than 2 children).
 
 -> The reason why the mod currently limits your to four children maximum is because it doesn't edit the number of beds in your house. Therefore, all of your children need to share the two existing beds. Two children can fit in a bed together, so four children is the limit (unless I update this mod to add more beds). Also, children will attempt to share a bed with a sibling of the same gender when possible.
