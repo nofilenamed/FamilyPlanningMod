@@ -11,7 +11,7 @@ Also, you will now be able to choose your child's gender when you name them. You
 
 ## Child Appearance Mods:
 
-If you're using other mods to change the appearance of your children, this mod will be affected. Any mod which directly replaces the xnb file will lead to children of the same gender being identical. Therefore, this mod is now compatible with Content Packs. If you'd like to make your own Content Pack for this mod, the process is relatively simple! The explanation is below.
+Using this mod, children of the same gender are identical, even when using mods which change child appearance. Therefore, this mod is now compatible with Content Packs. If you'd like to make your own Content Pack for this mod, the process is relatively simple! The explanation is below.
 
 ### Creating a Content Pack
 To create a Content Pack, first download the Example Content Pack from the Nexus page for Family Planning. There are three steps to finishing the Content Pack: you will need to edit the manifest.json, add your image files to the assets folder, and edit the data.json in the assets folder.
