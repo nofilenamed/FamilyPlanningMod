@@ -199,12 +199,12 @@ namespace FamilyPlanning
                         }
                         else if (Game1.player.getChildrenCount() == 3)
                         {
-                            s = "Three beautiful children... What a beautiful family we have.";
+                            s = "Three beautiful children... This is so wonderful.";
                             spouse.setNewDialogue(s, false, false);
                         }
                         else
                         {
-                            s = "What a big, happy family... This is so wonderful.";
+                            s = "What a big, happy family... I couldn't have imagined I would be so happy before I met you.";
                             spouse.setNewDialogue(s, false, false);
                         }
                     }

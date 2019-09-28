@@ -81,7 +81,7 @@ namespace FamilyPlanning
                 contentPacks.Add(contentPack);
             }
         }
-
+        
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             if (!Context.IsWorldReady)
@@ -97,7 +97,7 @@ namespace FamilyPlanning
                 Helper.Data.WriteJsonFile<FamilyData>("data/savedata.json", data);
             }
         }
-
+        
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             if (!Context.IsWorldReady)
@@ -109,7 +109,7 @@ namespace FamilyPlanning
                 Game1.farmEvent.setUp();
             }
         }
-
+         
         public void GetTotalChildrenConsole(string command, string[] args)
         {
             if (!Context.IsWorldReady)
@@ -144,12 +144,12 @@ namespace FamilyPlanning
                 Monitor.Log(e.Message);
             }
         }
-
+         
         public static FamilyData GetFamilyData()
         {
             return data;
         }
-
+         
         public static Tuple<string, string> GetChildSpriteData(string childName)
         {
             foreach(IContentPack contentPack in contentPacks)
