@@ -3,9 +3,9 @@ This is a Stardew Valley mod called Family Planning. Family Planning allows you 
 
 ## How to use:
 
-After you've loaded the singleplayer save file you want the mod to change, go to the SMAPI console and use the command "set_number_of_children \<value\>". This will change the maximum number of children you can have to the value you entered, from zero to four. There's also a command "get_number_of_children" to check what the value is currently set to.
+After you've loaded the singleplayer save file you want the mod to change, go to the SMAPI console and use the command "set_max_children \<value\>". This will change the maximum number of children you can have to the value you entered, from zero to four. There's also a command "get_max_children" to check what the value is currently set to.
 
-For example, if you wanted to have the max number of children possible, four, you would load your save file and type "set_number_of_children 4" into the console. Your spouse will then be able to prompt you about having children until you reach four.
+For example, if you wanted to have the max number of children possible, four, you would load your save file and type "set_max_children 4" into the console. Your spouse will then be able to prompt you about having children until you reach four.
 
 Also, you will now be able to choose your child's gender when you name them. You could have one son, or three daughters, or two sons and two daughters, or no children at all, etc, the choice is yours.
 
