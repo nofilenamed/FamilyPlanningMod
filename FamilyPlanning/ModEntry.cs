@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using System.Collections.Generic;
 using StardewModdingAPI;
 using Harmony;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Events;
-using System.Collections.Generic;
+using StardewValley.Characters;
 
 namespace FamilyPlanning
 {
@@ -16,16 +17,6 @@ namespace FamilyPlanning
      *   -> The default is 2, vanilla behavior. (if they don't already have more than 2 kids)
      *   -> If more than 2, then they get the event even after 2 children.
      * -> Also, this mods allows the player to customize the gender of the child at birth.
-     */
-
-    /* Documented issues:
-     * -> I haven't comfirmed whether every language works with my message editing.
-     * -> If you have more than 2 kids, kids will have to share beds.
-     * -> Your spouse can't get pregnant until the previous child is a toddler. (not vanilla?)
-     * -> The way children choose beds is by gender and age. If you have two or fewer kids, they each get their own bed.
-     *    Once you get more than 2, they need to double up, so they'll try first to double up with a sibling of the same gender.
-     * -> Currently disabled for multiplayer
-     * -> (not so much an issue: you still get the Fullhouse achievment at 2 kids)
      */
 
     /* Harmony patches needed:
@@ -39,6 +30,15 @@ namespace FamilyPlanning
      * I'll add a pre-made Content Pack on Nexus that only needs your to add the existing png's.
      * Instructions for how to make a Content Pack are in the README.md on GitHub and to a lesser extent the ContentPackData class.
      */
+
+    /* Content Patcher:
+     * I've also added support for Content Patcher content packs to this mod.
+     * I try to load the sprite from the value "Characters\\<Child Name>",
+     * which they can get access to through the custom CP tokens.
+     * There is also a token, IsToddler, which returns:
+     * -> "true" when the child is toddler age (3), and
+     * -> "false" when the child is younger (0 to 2).
+     */ 
 
     /* Multiplayer testing:
      * -> Pathoschild discovered a glitch in Stardew Valley 1.3.
@@ -55,9 +55,10 @@ namespace FamilyPlanning
     {
         private static FamilyData data;
         private static List<IContentPack> contentPacks;
-        private static IMonitor monitor;
+        public static IMonitor monitor;
         public static IModHelper helper;
         private readonly int maxChildren = 4;
+        private bool firstTick = true;
 
         public override void Entry(IModHelper helper)
         {
@@ -67,6 +68,7 @@ namespace FamilyPlanning
             //Event handlers
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
+            helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             //Harmony
             HarmonyInstance harmony = HarmonyInstance.Create("Loe2run.FamilyPlanning");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
@@ -90,11 +92,16 @@ namespace FamilyPlanning
             try
             {
                 data = Helper.Data.ReadJsonFile<FamilyData>("data/savedata.json");
+                if(data.TotalChildren > maxChildren)
+                {
+                    data.TotalChildren = maxChildren;
+                    Helper.Data.WriteJsonFile("data/savedata.json", data);
+                }
             }
             catch (Exception)
             {
                 data = new FamilyData();
-                Helper.Data.WriteJsonFile<FamilyData>("data/savedata.json", data);
+                Helper.Data.WriteJsonFile("data/savedata.json", data);
             }
         }
         
@@ -103,13 +110,111 @@ namespace FamilyPlanning
             if (!Context.IsWorldReady)
                 return;
 
+            if (firstTick)
+            {
+                try
+                {
+                    foreach (Child child in Game1.player.getChildren())
+                        child.reloadSprite();
+                    firstTick = false;
+                }
+                catch (Exception) { }
+            }
+
             if (Game1.farmEvent != null && Game1.farmEvent is BirthingEvent)
             {
                 Game1.farmEvent = new CustomBirthingEvent();
                 Game1.farmEvent.setUp();
             }
         }
-         
+
+        private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
+        {
+            IContentPatcherAPI api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            if (api == null)
+                return;
+
+            ChildToken token = new ChildToken(1);
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "FirstChildName",
+                updateContext: token.NameUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.NameGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "FirstChildIsToddler",
+                updateContext: token.AgeUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.AgeGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+
+            token = new ChildToken(2);
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "SecondChildName",
+                updateContext: token.NameUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.NameGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "SecondChildIsToddler",
+                updateContext: token.AgeUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.AgeGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+
+            token = new ChildToken(3);
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "ThirdChildName",
+                updateContext: token.NameUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.NameGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "ThirdChildIsToddler",
+                updateContext: token.AgeUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.AgeGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+
+            token = new ChildToken(4);
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "FourthChildName",
+                updateContext: token.NameUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.NameGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+            api.RegisterToken(
+                mod: ModManifest,
+                name: "FourthChildIsToddler",
+                updateContext: token.AgeUpdateContext,
+                isReady: token.IsReady,
+                getValue: token.AgeGetValue,
+                allowsInput: false,
+                requiresInput: false
+            );
+        }
+
         public void GetTotalChildrenConsole(string command, string[] args)
         {
             if (!Context.IsWorldReady)
