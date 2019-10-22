@@ -14,17 +14,46 @@ Also, you will now be able to choose your child's gender when you name them. You
 ## Mod Customization
 ### Child Appearance Mods
 
-Using this mod, children of the same gender are identical, even when using mods which change child appearance. Therefore, this mod is now compatible with Content Packs. If you'd like to make your own Content Pack for this mod, the process is relatively simple! The explanation is below.
+By default, children of the same gender are identical. So if you'd like them to look different, you'll need to use another mod to change their appearance. There are two options: Content Packs for Family Planning, or using Content Patcher mods.
+
+If you'd like to make a Content Pack for this mod, the process is relatively simple! The explanation is below the Content Patcher section.
+If you'd like to make a Content Patcher mod, then you'll want to use the custom CP tokens that this mod makes possible. The explanation is below.
+
+### Content Patcher tokens
+To use the CP tokens that Family Planning provides, make sure to set Family Planning ("Loe2run.FamilyPlanning") as a dependency.
+
+Family Planning will attempt to load the child sprite from the file "Characters\\<Child Name>". In order for your CP mod to target that file, you'll need to use the ChildName token. There's a version of this token for each child (by birth order).
+  
+So for example, when you want to patch over the appearance of the older child, your Target field would look like this.
+
+```cs
+"Target": "Characters\\{{Loe2run.FamilyPlanning/FirstChildName}}"
+```
+The second token that you can use is the IsToddler token, which returns "true" or "false". This helps you distinguish whether to use a toddler sprite or a baby sprite.
+
+So to continue the example from above, this is what your full entry would look like when trying to load a new toddler sprite for the oldest child.
+```cs
+{
+  "LogName": "First Child Sprites (Toddler)",
+  "Action": "Load",
+  "Target": "Characters/{{Loe2run.FamilyPlanning/FirstChildName}}",
+  "FromFile": "assets/first_child_toddler.png",
+  "When":
+  {
+    "Loe2run.FamilyPlanning/FirstChildIsToddler": "true"
+  }
+},
+```
 
 ### Creating a Content Pack
 To create a Content Pack, first download the Example Content Pack from the Nexus page for Family Planning. There are three steps to finishing the Content Pack: you will need to edit the manifest.json, add your image files to the assets folder, and edit the data.json in the assets folder.
 
-### Manifest.json
+#### Manifest.json
 Inside the manifest.json, you should replace the text \<Your Name Here\> in the Author and UniqueID fields with your name.
   
 For example, my name is Loe2run, so I would replace "\<Your Name Here\>" with "Loe2run". SMAPI will not run your Content Pack if "\<Your Name Here\>" is in the manifest.json file (because the \< character isn't allowed).
   
-### Image files
+#### Image files
 Decide on which image files you'd like to use for your children and place those files in the assets folder.
 
 For example, let's say that your Farmer is married to Leah and you'd like to use the sprite from Lakoria's BabiesTakeAfterSpouse. You have two daughters, Amber and Beverly, who need new sprites.
@@ -34,7 +63,7 @@ for Beverly, you want "leahbaby.png" as a baby and "leahpigtails.png" as a toddl
 
 Copy the image files you want, "leahbaby.png", "leahhairbuns.png", and "leahpigtails.png" to the assets folder. (You can rename these files if it's convenient to you, but it's not necessary. They can have whatever names you want.)
 
-### Data.json
+#### Data.json
 Now that you've added the image files, you'll see a data.json file in the assets folder with your image files.
 The default version of this file reads as:
 ```cs
@@ -64,7 +93,7 @@ This default version only has a single entry, but you can copy and paste this as
 ```
 And that's it! You should now be able to run the game with the custom sprites.
 
-### Additional Notes
+#### Additional Notes
 This method currently only works with .png files. I'm hoping to expand to allow .xnb files soon, but until then, your best bet is to try and convert the .xnb file you like to a .png image. More information on that at the [Stardew Valley Wiki.](https://stardewvalleywiki.com/Modding:Editing_XNB_files#Unpack_game_files)
 
 If you don't know the name of your child because they haven't been born yet, that's fine! Just wait until the child is born, name them, wait for the game to save, and then exit to desktop and follow the steps above. The next time your open the game, your newly named child should have a custom sprite.
