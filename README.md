@@ -22,12 +22,12 @@ If you'd like to make a Content Patcher mod, then you'll want to use the custom 
 ### Content Patcher tokens
 To use the CP tokens that Family Planning provides, make sure to set Family Planning ("Loe2run.FamilyPlanning") as a dependency.
 
-Family Planning will attempt to load the child sprite from the file "Characters\\<Child Name>". In order for your CP mod to target that file, you'll need to use the ChildName token. There's a version of this token for each child (by birth order).
+Family Planning will attempt to load the child sprite from the file "Characters\\Child_<Child Name>". In order for your CP mod to target that file, you'll need to use the ChildName token. There's a version of this token for each child (by birth order).
   
 So for example, when you want to patch over the appearance of the older child, your Target field would look like this.
 
 ```cs
-"Target": "Characters\\{{Loe2run.FamilyPlanning/FirstChildName}}"
+"Target": "Characters\\Child_{{Loe2run.FamilyPlanning/FirstChildName}}"
 ```
 The second token that you can use is the IsToddler token, which returns "true" or "false". This helps you distinguish whether to use a toddler sprite or a baby sprite.
 
@@ -36,7 +36,7 @@ So to continue the example from above, this is what your full entry would look l
 {
   "LogName": "First Child Sprites (Toddler)",
   "Action": "Load",
-  "Target": "Characters/{{Loe2run.FamilyPlanning/FirstChildName}}",
+  "Target": "Characters/Child_{{Loe2run.FamilyPlanning/FirstChildName}}",
   "FromFile": "assets/first_child_toddler.png",
   "When":
   {
