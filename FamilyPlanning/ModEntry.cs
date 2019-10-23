@@ -33,7 +33,7 @@ namespace FamilyPlanning
 
     /* Content Patcher:
      * I've also added support for Content Patcher content packs to this mod.
-     * I try to load the sprite from the value "Characters\\<Child Name>",
+     * I try to load the sprite from the value "Characters\\Child_<Child Name>",
      * which they can get access to through the custom CP tokens.
      * There is also a token, IsToddler, which returns:
      * -> "true" when the child is toddler age (3), and

@@ -23,7 +23,7 @@ namespace FamilyPlanning.Patches
                 //If that fails, try to load the child sprite from a Content Patcher content pack
                 try
                 {
-                    __instance.Sprite = new AnimatedSprite("Characters\\" + __instance.Name);
+                    __instance.Sprite = new AnimatedSprite("Characters\\Child_" + __instance.Name);
                 }
                 catch (Exception) { }
 
