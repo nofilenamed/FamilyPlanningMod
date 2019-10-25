@@ -10,6 +10,7 @@ using StardewValley.Characters;
 
 namespace FamilyPlanning
 {
+
     /* Family Planning: allow players to customize the number of children they have.
      * -> The player enters the number of children they want, for now it's a console command.
      *   -> If 0, they never get the question.
@@ -38,7 +39,7 @@ namespace FamilyPlanning
      * There is also a token, IsToddler, which returns:
      * -> "true" when the child is toddler age (3), and
      * -> "false" when the child is younger (0 to 2).
-     */ 
+     */
 
     /* Multiplayer testing:
      * -> Pathoschild discovered a glitch in Stardew Valley 1.3.
@@ -48,7 +49,7 @@ namespace FamilyPlanning
      *    there are some serious issues (crashing).
      * -> Multiplayer compatibility: It's okay for only one player to have Family Planning,
      *    but if you want to have a content pack, then both players need Family Planning & that exact content pack.
-     * -> (Also for the sake of multiplayer compatibility, save data is now saved to assets/savedata.json)
+     * -> (Also for the sake of multiplayer compatibility, save data is now saved to data/<Save Folder Name>.json)
      */
 
     class ModEntry : Mod
@@ -91,17 +92,18 @@ namespace FamilyPlanning
 
             try
             {
-                data = Helper.Data.ReadJsonFile<FamilyData>("data/savedata.json");
+                data = Helper.Data.ReadJsonFile<FamilyData>("data/" +  Constants.SaveFolderName +".json");
+                
                 if(data.TotalChildren > maxChildren)
                 {
                     data.TotalChildren = maxChildren;
-                    Helper.Data.WriteJsonFile("data/savedata.json", data);
+                    Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
                 }
             }
             catch (Exception)
             {
                 data = new FamilyData();
-                Helper.Data.WriteJsonFile("data/savedata.json", data);
+                Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
             }
         }
         
@@ -238,7 +240,7 @@ namespace FamilyPlanning
                 else if (input >= 0)
                 {
                     data.TotalChildren = input;
-                    Helper.Data.WriteJsonFile("data/savedata.json", data);
+                    Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
                     Monitor.Log("The number of children you can have has been set to " + input + ".");
                 }
                 else
