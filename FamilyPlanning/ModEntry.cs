@@ -10,7 +10,6 @@ using StardewValley.Characters;
 
 namespace FamilyPlanning
 {
-
     /* Family Planning: allow players to customize the number of children they have.
      * -> The player enters the number of children they want, for now it's a console command.
      *   -> If 0, they never get the question.
@@ -39,6 +38,7 @@ namespace FamilyPlanning
      * There is also a token, IsToddler, which returns:
      * -> "true" when the child is toddler age (3), and
      * -> "false" when the child is younger (0 to 2).
+     * (I'm considering adding a gender token, but haven't gotten confirmation that it's necessary.)
      */
 
     /* Multiplayer testing:
@@ -49,6 +49,8 @@ namespace FamilyPlanning
      *    there are some serious issues (crashing).
      * -> Multiplayer compatibility: It's okay for only one player to have Family Planning,
      *    but if you want to have a content pack, then both players need Family Planning & that exact content pack.
+     * -> I'm not sure what the effect of having a Content Patcher child mod in multiplayer is.
+     *    Considering what happens with content packs, I'd hazard to say there's the same problems?
      * -> (Also for the sake of multiplayer compatibility, save data is now saved to data/<Save Folder Name>.json)
      */
 
