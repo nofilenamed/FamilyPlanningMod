@@ -52,14 +52,13 @@ namespace FamilyPlanning
         private static List<IContentPack> contentPacks;
         public static IMonitor monitor;
         public static IModHelper helper;
-        private readonly int maxChildren = 4;
         private bool firstTick = true;
 
         public override void Entry(IModHelper helper)
         {
             //Console commands
             helper.ConsoleCommands.Add("get_max_children", "Returns the number of children you can have.", GetTotalChildrenConsole);
-            helper.ConsoleCommands.Add("set_max_children", "Sets the value for how many children you can have. (Currently, the limit is " + maxChildren + ".) \nUsage: set_max_children <value>\n- value: the number of children you can have.", SetTotalChildrenConsole);
+            helper.ConsoleCommands.Add("set_max_children", "Sets the value for how many children you can have. (If you set the value to more than 4, children will overlap in bed and Content Patcher mods may not work.)\nUsage: set_max_children <value>\n- value: the number of children you can have.", SetTotalChildrenConsole);
             //Event handlers
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
@@ -93,11 +92,6 @@ namespace FamilyPlanning
                     data = new FamilyData();
                     Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
                 }
-                if (data.TotalChildren > maxChildren)
-                {
-                    data.TotalChildren = maxChildren;
-                    Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
-                }
             }
             catch (Exception)
             {
@@ -113,7 +107,9 @@ namespace FamilyPlanning
                 try
                 {
                     foreach (Child child in Game1.player.getChildren())
+                    {
                         child.reloadSprite();
+                    }
                     firstTick = false;
                 }
                 catch (Exception) { }
@@ -231,9 +227,7 @@ namespace FamilyPlanning
             {
                 input = int.Parse(args[0]);
 
-                if (input > maxChildren)
-                    Monitor.Log("This mod currently limits your maximum to " + maxChildren + ", so your input won't be accepted.");
-                else if (input >= 0)
+                if (input >= 0)
                 {
                     data.TotalChildren = input;
                     Helper.Data.WriteJsonFile("data/" + Constants.SaveFolderName + ".json", data);
