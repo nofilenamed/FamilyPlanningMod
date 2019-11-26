@@ -10,14 +10,14 @@ namespace FamilyPlanning.Patches
     [HarmonyPatch("canGetPregnant")]
     class CanGetPregnantPatch
     {
-        public static void Postfix(ref bool __result)
+        public static void Postfix(NPC __instance, ref bool __result)
         {
             if (!Game1.IsMasterGame)
                 return;
 
             int totalChildren = ModEntry.GetFamilyData().TotalChildren;
-            Farmer farmer = Game1.player;
-            NPC spouse = farmer.getSpouse();
+            NPC spouse = __instance;
+            Farmer farmer = spouse.getSpouse();
 
             //This is from the original method
             if (spouse is Horse || spouse.Name.Equals("Krobus") || spouse.isRoommate())
