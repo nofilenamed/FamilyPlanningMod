@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using StardewModdingAPI;
 using Harmony;
@@ -29,7 +28,6 @@ namespace FamilyPlanning
 
     /* Content Packs:
      * Instructions for how to make a Content Pack are in the README.md on GitHub 
-     * (and to a lesser extent the ContentPackData class).
      */
 
     /* Content Patcher:
@@ -56,6 +54,9 @@ namespace FamilyPlanning
 
         public override void Entry(IModHelper helper)
         {
+            //create variables
+            monitor = Monitor;
+            ModEntry.helper = helper;
             //Console commands
             helper.ConsoleCommands.Add("get_max_children", "Returns the number of children you can have.", GetTotalChildrenConsole);
             helper.ConsoleCommands.Add("set_max_children", "Sets the value for how many children you can have. (If you set the value to more than 4, children will overlap in bed and Content Patcher mods may not work.)\nUsage: set_max_children <value>\n- value: the number of children you can have.", SetTotalChildrenConsole);
@@ -63,12 +64,25 @@ namespace FamilyPlanning
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.GameLoop.OneSecondUpdateTicked += OnOneSecondUpdateTicked;
             //Harmony
             HarmonyInstance harmony = HarmonyInstance.Create("Loe2run.FamilyPlanning");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
-            //create variables
-            monitor = Monitor;
-            ModEntry.helper = helper;
+            
+            harmony.Patch(
+               original: AccessTools.Method(typeof(NPC), nameof(NPC.canGetPregnant)),
+               postfix: new HarmonyMethod(typeof(Patches.CanGetPregnantPatch), nameof(Patches.CanGetPregnantPatch.Postfix))
+            );
+            harmony.Patch(
+               original: AccessTools.Method(typeof(Child), nameof(Child.reloadSprite)),
+               postfix: new HarmonyMethod(typeof(Patches.ChildReloadSpritePatch), nameof(Patches.ChildReloadSpritePatch.Postfix))
+            );
+            harmony.Patch(
+               original: AccessTools.Method(typeof(Child), nameof(Child.tenMinuteUpdate)),
+               postfix: new HarmonyMethod(typeof(Patches.ChildTenMinuteUpdatePatch), nameof(Patches.ChildTenMinuteUpdatePatch.Postfix))
+            );
+
+            //harmony.PatchAll(Assembly.GetExecutingAssembly());
+
             //Load content packs
             contentPacks = new List<IContentPack>();
             foreach (IContentPack contentPack in helper.ContentPacks.GetOwned())
@@ -102,6 +116,15 @@ namespace FamilyPlanning
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
+            if (Game1.farmEvent != null && Game1.farmEvent is BirthingEvent)
+            {
+                Game1.farmEvent = new CustomBirthingEvent();
+                Game1.farmEvent.setUp();
+            }
+        }
+
+        private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        {
             if (firstTick)
             {
                 try
@@ -113,12 +136,6 @@ namespace FamilyPlanning
                     firstTick = false;
                 }
                 catch (Exception) { }
-            }
-
-            if (Game1.farmEvent != null && Game1.farmEvent is BirthingEvent)
-            {
-                Game1.farmEvent = new CustomBirthingEvent();
-                Game1.farmEvent.setUp();
             }
         }
 
