@@ -2,12 +2,9 @@
 using Netcode;
 using StardewValley;
 using StardewValley.Characters;
-using Harmony;
 
 namespace FamilyPlanning.Patches
 {
-    [HarmonyPatch(typeof(NPC))]
-    [HarmonyPatch("canGetPregnant")]
     class CanGetPregnantPatch
     {
         public static void Postfix(NPC __instance, ref bool __result)
