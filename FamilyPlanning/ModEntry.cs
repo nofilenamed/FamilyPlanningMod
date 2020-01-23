@@ -379,7 +379,7 @@ namespace FamilyPlanning
             return null;
         }
 
-        public static Tuple<int, string> GetSpouseDialogueData(string spouseName)
+        public static List<Tuple<int, string>> GetSpouseDialogueData(string spouseName)
         {
             foreach (IContentPack contentPack in contentPacks)
             {
@@ -392,7 +392,7 @@ namespace FamilyPlanning
                     {
                         if (key.Equals(spouseName))
                         {
-                            cpdata.SpouseDialogue.TryGetValue(key, out Tuple<int, string> spouseDialogue);
+                            cpdata.SpouseDialogue.TryGetValue(key, out List<Tuple<int, string>> spouseDialogue);
                             return spouseDialogue;
                         }
                     }
