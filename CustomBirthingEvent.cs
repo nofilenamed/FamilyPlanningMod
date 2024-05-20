@@ -48,7 +48,7 @@ namespace FamilyPlanning
         public bool setUp()
         {
             //Random random = new((int)Game1.uniqueIDForThisGame + (int)Game1.stats.DaysPlayed);
-            NPC spouse = Game1.getCharacterFromName(Game1.player.spouse, false);
+            NPC spouse = Game1.player.getSpouse();
             Game1.player.CanMove = false;
 
             isMale = true;

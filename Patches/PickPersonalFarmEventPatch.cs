@@ -18,7 +18,7 @@ namespace FamilyPlanning.Patches
             if (Game1.weddingToday)
                 return true;
 
-            bool isMarried = !string.IsNullOrEmpty(Game1.player.spouse);
+            bool isMarried = Game1.player.isMarriedOrRoommates();
 
             //Skip if there's a birth
             //(This is very close to the original code)

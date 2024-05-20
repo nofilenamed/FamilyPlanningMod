@@ -1,12 +1,12 @@
 ﻿{
   "Name": "Family Planning",
   "Author": "nofilenamed",
-  "Version": "1.4.1",
+  "Version": "2.0.0",
   "Description": "Allows you to customize the number of children you have and their genders, adjust the chance of having children, and adopt children with a roommate.",
   "UniqueID": "NFNFP",
   "EntryDll": "FamilyPlanning.dll",
   "MinimumApiVersion": "4.0.8",
-  "UpdateKeys": [ "Nexus:4515" ],
+  "UpdateKeys": [ "Nexus:NONE" ],
   "Dependencies": [
     {
       "UniqueID": "Pathoschild.ContentPatcher",
