@@ -12,7 +12,7 @@ namespace FamilyPlanning.Patches
      */
     class PickPersonalFarmEventPatch
     {
-        public static bool Prefix(ref FarmEvent result)
+        public static bool Prefix(ref FarmEvent __result)
         {
             //Skip if there's a wedding
             if (Game1.weddingToday)
@@ -26,14 +26,14 @@ namespace FamilyPlanning.Patches
             {
                 if (Game1.player.spouse != null)
                 {
-                    result = new BirthingEvent();
+                    __result = new BirthingEvent();
                     return false;
                 }
 
                 long key = Game1.player.team.GetSpouse(Game1.player.UniqueMultiplayerID).Value;
                 if (Game1.otherFarmers.ContainsKey(key))
                 {
-                    result = new PlayerCoupleBirthingEvent();
+                    __result = new PlayerCoupleBirthingEvent();
                     return false;
                 }
             }
@@ -74,7 +74,7 @@ namespace FamilyPlanning.Patches
                             else
                                 ModEntry.monitor.Log(npcSpouse + " will ask you about having a baby tonight.", StardewModdingAPI.LogLevel.Info);
                         }
-                        result = new QuestionEvent(1);
+                        __result = new QuestionEvent(1);
                         return false;
                     }
 
@@ -106,7 +106,7 @@ namespace FamilyPlanning.Patches
                             {
                                 if (message)
                                     ModEntry.monitor.Log(otherFarmer.Name + " will ask about having a baby tonight.", StardewModdingAPI.LogLevel.Info);
-                                result = new QuestionEvent(3);
+                                __result = new QuestionEvent(3);
                                 return false;
                             }
 
@@ -122,7 +122,7 @@ namespace FamilyPlanning.Patches
             }
 
             //If no other event happened, then check for animal events
-            result = random.NextDouble() < 0.5 ? (FarmEvent)new QuestionEvent(2) : (FarmEvent)new SoundInTheNightEvent(2);
+            __result = random.NextDouble() < 0.5 ? (FarmEvent)new QuestionEvent(2) : (FarmEvent)new SoundInTheNightEvent(2);
             return false;
         }
     }

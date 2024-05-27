@@ -9,13 +9,13 @@ namespace FamilyPlanning.Patches
 {
     class CanGetPregnantPatch
     {
-        public static void Postfix(NPC npc, ref bool result)
+        public static void Postfix(NPC __instance, ref bool __result)
         {
             if (!Game1.IsMasterGame)
                 return;
 
             int totalChildren = ModEntry.GetFamilyData().TotalChildren;
-            NPC spouse = npc;
+            NPC spouse = __instance;
             Farmer farmer = spouse.getSpouse();
 
             //This is from the original method
@@ -51,11 +51,11 @@ namespace FamilyPlanning.Patches
                 {
                     if (child.daysOld.Value < 41)
                     {
-                        result = false;
+                        __result = false;
                         return;
                     }
                 }
-                result = true;
+                __result = true;
             }
         }
     }

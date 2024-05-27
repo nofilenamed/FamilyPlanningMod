@@ -12,15 +12,15 @@ namespace FamilyPlanning.Patches
 {
     class ChildTenMinuteUpdatePatch
     {
-        public static void Postfix(Child chil)
+        public static void Postfix(Child __instance)
         {
-            if (!Game1.IsMasterGame || chil.Age != 3 || Game1.timeOfDay != 1900)
+            if (!Game1.IsMasterGame || __instance.Age != 3 || Game1.timeOfDay != 1900)
                 return;
 
-            chil.IsWalkingInSquare = false;
-            chil.Halt();
-            FarmHouse currentLocation = chil.currentLocation as FarmHouse;
-            if (!currentLocation.characters.Contains(chil))
+            __instance.IsWalkingInSquare = false;
+            __instance.Halt();
+            FarmHouse currentLocation = __instance.currentLocation as FarmHouse;
+            if (!currentLocation.characters.Contains(__instance))
                 return;
 
             /* 
@@ -47,7 +47,7 @@ namespace FamilyPlanning.Patches
                 else
                     girls++;
 
-                if (child.Equals(chil))
+                if (child.Equals(__instance))
                 {
                     birthNumber = i;
                     break;
@@ -94,10 +94,10 @@ namespace FamilyPlanning.Patches
                 }
             }
 
-            chil.controller = new PathFindController(chil, currentLocation, childBed, -1, new PathFindController.endBehavior(chil.toddlerReachedDestination));
-            if (chil.controller.pathToEndPoint != null && currentLocation.isTileOnMap(chil.controller.pathToEndPoint.Last().X, chil.controller.pathToEndPoint.Last().Y))
+            __instance.controller = new PathFindController(__instance, currentLocation, childBed, -1, new PathFindController.endBehavior(__instance.toddlerReachedDestination));
+            if (__instance.controller.pathToEndPoint != null && currentLocation.isTileOnMap(__instance.controller.pathToEndPoint.Last().X, __instance.controller.pathToEndPoint.Last().Y))
                 return;
-            chil.controller = null;
+            __instance.controller = null;
         }
     }
 }

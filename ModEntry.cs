@@ -103,6 +103,7 @@ namespace FamilyPlanning
             //Harmony
             var harmony = new Harmony(ModManifest.UniqueID);
 
+            
             harmony.Patch(
                original: AccessTools.Method(typeof(NPC), nameof(NPC.canGetPregnant)),
                postfix: new HarmonyMethod(typeof(Patches.CanGetPregnantPatch), nameof(Patches.CanGetPregnantPatch.Postfix))

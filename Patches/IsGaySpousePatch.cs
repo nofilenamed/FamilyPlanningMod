@@ -9,11 +9,11 @@ namespace FamilyPlanning.Patches
 
     class IsGaySpousePatch
     {
-        public static void Postfix(NPC npc, ref bool result)
+        public static void Postfix(NPC __instance, ref bool __result)
         {
-            if (ModEntry.RoommateConfig() && npc.isRoommate())
+            if (ModEntry.RoommateConfig() && __instance.isRoommate())
             {
-                result = true;
+                __result = true;
                 return;
             }
         }

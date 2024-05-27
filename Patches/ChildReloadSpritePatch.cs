@@ -8,11 +8,11 @@ namespace FamilyPlanning.Patches
 {
     class ChildReloadSpritePatch
     {
-        public static void Postfix(Child child)
+        public static void Postfix(Child __instance)
         {
             //Added in the 1.4 update
             //(Presumably this fixes the multiplayer glitches)
-            if (Game1.IsMasterGame && child.idOfParent.Value == 0L)
+            if (Game1.IsMasterGame && __instance.idOfParent.Value == 0L)
             {
                 int uniqueMultiplayerId = (int)Game1.MasterPlayer.UniqueMultiplayerID;
                 if (Game1.currentLocation is FarmHouse)
@@ -21,57 +21,57 @@ namespace FamilyPlanning.Patches
                     if (currentLocation.owner != null)
                         uniqueMultiplayerId = (int)currentLocation.owner.UniqueMultiplayerID;
                 }
-                child.idOfParent.Value = uniqueMultiplayerId;
+                __instance.idOfParent.Value = uniqueMultiplayerId;
             }
 
-            if (child.Sprite == null || child.Sprite.textureName.Contains("Characters\\") || (child.Age >= 3 && child.Sprite.CurrentFrame == 0))
+            if (__instance.Sprite == null || __instance.Sprite.textureName.Contains("Characters\\") || (__instance.Age >= 3 && __instance.Sprite.CurrentFrame == 0))
             {
                 //Try to load the child sprite from a content pack
-                Tuple<string, string> assetNames = ModEntry.GetChildSpriteData(child.Name);
+                Tuple<string, string> assetNames = ModEntry.GetChildSpriteData(__instance.Name);
                 if (assetNames != null)
                 {
-                    string assetKey = child.Age >= 3 ? assetNames.Item2 : assetNames.Item1;
-                    child.Sprite = new AnimatedSprite(assetKey);
+                    string assetKey = __instance.Age >= 3 ? assetNames.Item2 : assetNames.Item1;
+                    __instance.Sprite = new AnimatedSprite(assetKey);
                 }
                 //If that fails, try to load the child sprite from a Content Patcher content pack
                 try
                 {
-                    child.Sprite = new AnimatedSprite("Characters\\Child_" + child.Name);
+                    __instance.Sprite = new AnimatedSprite("Characters\\Child_" + __instance.Name);
                 }
                 catch (Exception) { }
 
                 //If that fails, load the vanilla sprite
-                child.Sprite ??= new AnimatedSprite(child.Age >= 3 ? "Characters\\Toddler" + (child.Gender == 0 ? "" : "_girl") + (child.darkSkinned.Value ? "_dark" : "") : "Characters\\Baby" + (child.darkSkinned.Value ? "_dark" : ""));
+                __instance.Sprite ??= new AnimatedSprite(__instance.Age >= 3 ? "Characters\\Toddler" + (__instance.Gender == 0 ? "" : "_girl") + (__instance.darkSkinned.Value ? "_dark" : "") : "Characters\\Baby" + (__instance.darkSkinned.Value ? "_dark" : ""));
             }
             //This is default behavior, applies to anyone
-            child.HideShadow = true;
-            switch (child.Age)
+            __instance.HideShadow = true;
+            switch (__instance.Age)
             {
                 case 0:
-                    child.Sprite.CurrentFrame = 0;
-                    child.Sprite.SpriteWidth = 22;
-                    child.Sprite.SpriteHeight = 16;
+                    __instance.Sprite.CurrentFrame = 0;
+                    __instance.Sprite.SpriteWidth = 22;
+                    __instance.Sprite.SpriteHeight = 16;
                     break;
                 case 1:
-                    child.Sprite.CurrentFrame = 4;
-                    child.Sprite.SpriteWidth = 22;
-                    child.Sprite.SpriteHeight = 32;
+                    __instance.Sprite.CurrentFrame = 4;
+                    __instance.Sprite.SpriteWidth = 22;
+                    __instance.Sprite.SpriteHeight = 32;
                     break;
                 case 2:
-                    child.Sprite.CurrentFrame = 32;
-                    child.Sprite.SpriteWidth = 22;
-                    child.Sprite.SpriteHeight = 16;
+                    __instance.Sprite.CurrentFrame = 32;
+                    __instance.Sprite.SpriteWidth = 22;
+                    __instance.Sprite.SpriteHeight = 16;
                     break;
                 case 3:
-                    child.Sprite.CurrentFrame = 0;
-                    child.Sprite.SpriteWidth = 16;
-                    child.Sprite.SpriteHeight = 32;
-                    child.HideShadow = false;
+                    __instance.Sprite.CurrentFrame = 0;
+                    __instance.Sprite.SpriteWidth = 16;
+                    __instance.Sprite.SpriteHeight = 32;
+                    __instance.HideShadow = false;
                     break;
             }
 
-            child.Sprite.UpdateSourceRect();
-            child.Breather = false;
+            __instance.Sprite.UpdateSourceRect();
+            __instance.Breather = false;
         }
     }
 }
