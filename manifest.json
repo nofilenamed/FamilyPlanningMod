@@ -8,9 +8,6 @@
   "MinimumApiVersion": "4.0.8",
   "UpdateKeys": [ "Nexus:NONE" ],
   "Dependencies": [
-    {
-      "UniqueID": "Pathoschild.ContentPatcher",
-      "IsRequired": false
-    }
+    { "UniqueID": "Pathoschild.ContentPatcher" }
   ]
 }

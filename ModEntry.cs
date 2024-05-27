@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using ContentPatcher;
+
 using HarmonyLib;
 
 using StardewModdingAPI;
@@ -103,7 +105,7 @@ namespace FamilyPlanning
             //Harmony
             var harmony = new Harmony(ModManifest.UniqueID);
 
-            
+
             harmony.Patch(
                original: AccessTools.Method(typeof(NPC), nameof(NPC.canGetPregnant)),
                postfix: new HarmonyMethod(typeof(Patches.CanGetPregnantPatch), nameof(Patches.CanGetPregnantPatch.Postfix))
@@ -181,91 +183,22 @@ namespace FamilyPlanning
             }
         }
 
+        private void HandleTokenRegister(IContentPatcherAPI api, int child, string tokenName)
+        {
+            api.RegisterToken(ModManifest, tokenName + "Name", new ChildToken(child));
+            api.RegisterToken(ModManifest, tokenName + "IsToddler", new UpdateAgeChildToken(child));
+        }
+
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            IContentPatcherAPI api = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
+            var api = Helper.ModRegistry.GetApi<ContentPatcher.IContentPatcherAPI>("Pathoschild.ContentPatcher");
             if (api == null)
                 return;
 
-            ChildToken token = new ChildToken(1);
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "FirstChildName",
-                updateContext: token.NameUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.NameGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "FirstChildIsToddler",
-                updateContext: token.AgeUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.AgeGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-
-            token = new ChildToken(2);
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "SecondChildName",
-                updateContext: token.NameUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.NameGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "SecondChildIsToddler",
-                updateContext: token.AgeUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.AgeGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-
-            token = new ChildToken(3);
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "ThirdChildName",
-                updateContext: token.NameUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.NameGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "ThirdChildIsToddler",
-                updateContext: token.AgeUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.AgeGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-
-            token = new ChildToken(4);
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "FourthChildName",
-                updateContext: token.NameUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.NameGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
-            api.RegisterToken(
-                mod: ModManifest,
-                name: "FourthChildIsToddler",
-                updateContext: token.AgeUpdateContext,
-                isReady: token.IsReady,
-                getValue: token.AgeGetValue,
-                allowsInput: false,
-                requiresInput: false
-            );
+            HandleTokenRegister(api, 1, "First");
+            HandleTokenRegister(api, 2, "Second");
+            HandleTokenRegister(api, 3, "Third");
+            HandleTokenRegister(api, 3, "Fourth");
         }
 
         public void GetTotalChildrenConsole(string command, string[] args)
